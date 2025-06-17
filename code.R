@@ -2,17 +2,20 @@
 
 # Setup -------------------------------------------------------------------
 
-if (!require(devtools)) install.packages("devtools")
-library(devtools)
+# Packages to load
+packages <- c("devtools", "tidymodels", "MASS", "dplyr", "GGally", "vtable", "mlflow", "gridExtra")
 
-library(tidymodels)
-library(MASS)
-library(dplyr)
-library(GGally)
-library(vtable)
-library(mlflow)
-library(gridExtra) 
+# This function installs a package if it is not present and loads it
+install_and_load <- function(pkg) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg, dependencies = TRUE)
+    library(pkg, character.only = TRUE)
+  } else {
+    suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+  }
+}
 
+invisible(lapply(packages, install_and_load))
 
 tidymodels_prefer()
 
