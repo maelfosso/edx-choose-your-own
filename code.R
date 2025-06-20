@@ -25,9 +25,42 @@ rm(list = ls(all.names = TRUE))
 # Force garbage collection to free up memory
 gc(full = TRUE)
 
-# Load data ---------------------------------------------------------------
+# Download data ---------------------------------------------------------------
 
 DATASETS_DIR <- "./datasets"
+
+# URLs of the data to download
+urls <- c(
+  "https://raw.githubusercontent.com/dataafriquehub/energy_data/refs/heads/main/train.csv",
+  "https://raw.githubusercontent.com/dataafriquehub/energy_data/refs/heads/main/test.csv",
+  "https://raw.githubusercontent.com/dataafriquehub/energy_data/refs/heads/main/submission.csv"
+)
+
+# Name of the corresponding files
+files <- c("train.csv", "test.csv", "submission.csv")
+
+# Create 'datasets' folder if not exists
+if (!dir.exists(DATASETS_DIR)) {
+  dir.create(DATASETS_DIR)
+}
+
+# function for download a file
+download_file <- function(url, destfile) {
+  tryCatch({
+    download.file(url, destfile, mode = "wb")
+    message(paste("Downloaded :", destfile))
+  }, error = function(e) {
+    message(paste("Error when downloading", url))
+  })
+}
+
+# Download each file
+for (i in seq_along(urls)) {
+  dest_path <- file.path(DATASETS_DIR, files[i])
+  download_file(urls[i], dest_path)
+}
+
+# Load data ---------------------------------------------------------------
 
 # Locate CSV
 LOCAL_TRAIN_URL = file.path(DATASETS_DIR, "train.csv")
