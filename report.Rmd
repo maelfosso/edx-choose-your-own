@@ -1,5 +1,7 @@
 ---
 title: "Project Submission: Choose Your Own: DataTour 2024"
+author: "Mael FOSSO"
+date: "June 2025"
 output: pdf_document
 date: "2025-06-03"
 ---
