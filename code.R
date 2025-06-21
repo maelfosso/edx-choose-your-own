@@ -27,7 +27,36 @@ gc(full = TRUE)
 
 # Download data ---------------------------------------------------------------
 
-DATASETS_DIR <- "./datasets"
+# Fonction pour obtenir le chemin du script en cours d'exécution
+get_script_path <- function() {
+  cmdArgs <- commandArgs(trailingOnly = FALSE)
+
+  # Option pour RStudio
+  if (rstudioapi::isAvailable()) {
+    return(dirname(rstudioapi::getActiveDocumentContext()$path))
+  }
+
+  # Option pour RScript
+  needle <- "--file="
+  match <- grep(needle, cmdArgs)
+  if (length(match) > 0) {
+    return(dirname(normalizePath(sub(needle, "", cmdArgs[match]))))
+  }
+
+  # Option pour source() en ligne de commande
+  if (!is.null(sys.frames()[[1]]$ofile)) {
+    return(dirname(normalizePath(sys.frames()[[1]]$ofile)))
+  }
+
+  # Si aucune des méthodes ci-dessus ne fonctionne
+  stop("Impossible de déterminer le chemin du script")
+}
+
+# Get the directory of code.R and set it as workding directory
+script_dir <- get_script_path()
+setwd(script_dir)
+
+DATASETS_DIR <- file.path(script_dir, "datasets")
 
 # URLs of the data to download
 urls <- c(
